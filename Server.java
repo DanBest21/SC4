@@ -22,31 +22,35 @@ public class Server extends Thread
 	
 	public void run()
 	{
-		while (true)
-		{
-			Socket socket = null;
+		Socket socket = null;
 			
+		try
+		{
+			System.out.println("Server started on port number " + serverSocket.getLocalPort());
+				
+			while (true)
+			{
+				socket = serverSocket.accept();
+				
+				PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
+				BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			
+				System.out.println(input.readLine());
+			}
+		}
+		catch (IOException ex)
+		{
+			System.err.println(ex.getCause() + ": " + ex.getMessage());
+		}
+		finally 
+		{
 			try
 			{
-				System.out.println("Server started on port number " + serverSocket.getLocalPort());
-				socket = serverSocket.accept();
-				PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-				BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+				socket.close();
 			}
 			catch (IOException ex)
 			{
 				System.err.println(ex.getCause() + ": " + ex.getMessage());
-			}
-			finally 
-			{
-				try
-				{
-					socket.close();
-				}
-				catch (IOException ex)
-				{
-					System.err.println(ex.getCause() + ": " + ex.getMessage());
-				}
 			}
 		}
 	}
