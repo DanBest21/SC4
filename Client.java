@@ -17,10 +17,16 @@ public class Client
 			socket = new Socket(hostname, portNumber);
 			System.out.println("Connected to server at " + socket.getRemoteSocketAddress());
 			
-			while (true)
+			BufferedWriter output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			BufferedReader serverInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			
+			while (socket.isConnected())
 			{
 				Scanner input = new Scanner(System.in);
 				String message = input.nextLine();
+				
+				output.write(message);
+				output.flush();
 			}
 		}
 		catch (IOException ex)
